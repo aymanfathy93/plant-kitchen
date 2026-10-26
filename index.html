@@ -297,7 +297,13 @@ function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.i
 const num=n=>Math.round(n).toLocaleString('ar-EG');
 const fmtN=n=>{const r=Math.round(n*10)/10;return (Number.isInteger(r)?r:r.toFixed(1)).toLocaleString('ar-EG');};
 
-function photoBox(m,cls){const g=GROUP[m.group];return `<div class="ph ${cls||''}" style="--g1:${g.c1};--g2:${g.c2}"><span>${g.e}</span>${m.photo?`<img src="${esc(m.photo)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" alt="">`:''}</div>`;}
+/* صور درايف: lh3 الأول، ولو فشلت نجرب thumbnail، ولو فشلت نسيب الأيقونة */
+const driveId=u=>{const m=String(u||'').match(/[?&]id=([\w-]+)|\/d\/([\w-]+)/);return m?(m[1]||m[2]):'';};
+const imgSrc=(u,w)=>{const id=driveId(u);return id?`https://lh3.googleusercontent.com/d/${id}=w${w||800}`:u;};
+const imgAlt=(u,w)=>{const id=driveId(u);return id?`https://drive.google.com/thumbnail?id=${id}&sz=w${w||800}`:'';};
+function imgErr(el){const a=el.dataset.alt;if(a&&!el.dataset.tried){el.dataset.tried=1;el.src=a;}else el.remove();}
+function imgTag(u,w,extra){return `<img src="${esc(imgSrc(u,w))}" data-alt="${esc(imgAlt(u,w))}" loading="lazy" referrerpolicy="no-referrer" onerror="imgErr(this)" alt="" ${extra||''}>`;}
+function photoBox(m,cls){const g=GROUP[m.group];const w=cls?200:900;return `<div class="ph ${cls||''}" style="--g1:${g.c1};--g2:${g.c2}"><span>${g.e}</span>${m.photo?imgTag(m.photo,w):''}</div>`;}
 
 /* =========================================================
    المخطط الذكي
@@ -614,7 +620,7 @@ function openDetail(id,fromLib){
       ${sp.length?`<div class="ing" style="border:0"><span class="muted">توابل وإضافات</span><b style="font-weight:500">${sp.map(x=>esc(x[0])).join('، ')}</b></div>`:''}
     </div>
     <div class="card" style="margin-top:12px"><div class="h2" style="margin:0 0 10px">الطريقة</div><ol class="steps">${m.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>
-    ${m.contents.length?`<div class="h2">الوصفة الأصلية</div><div class="gal">${m.contents.map(u=>`<a href="${esc(u.replace('sz=w1000','sz=w2000'))}" target="_blank" rel="noopener"><img src="${esc(u)}" referrerpolicy="no-referrer" loading="lazy" alt=""></a>`).join('')}</div>`:''}
+    ${m.contents.length?`<div class="h2">الوصفة الأصلية</div><div class="gal">${m.contents.map(u=>`<a href="${esc(imgSrc(u,2000))}" target="_blank" rel="noopener">${imgTag(u,1000)}</a>`).join('')}</div>`:''}
     <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
       <button class="btn" onclick="openPlace('${m.id}')">📅 حطيها في الخطة</button>
       ${m.link?`<a class="btn ghost" href="${esc(m.link)}" target="_blank" rel="noopener">🔗 الوصفة على الموقع</a>`:''}
