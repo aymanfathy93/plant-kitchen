@@ -267,7 +267,7 @@ const ROUTES=[['today','النهارده'],['week','الأسبوع'],['shop','ا
 ========================================================= */
 const M={}; MEALS.forEach(m=>{M[m.id]=m;m.photo='';m.contents=[];m.link='';});
 const BY_EN={}; MEALS.forEach(m=>BY_EN[m.en]=m);
-let S={settings:{persons:3,kcal:1800,weekStart:6},plans:{},checks:{},log:[],photos:{}};
+let S={settings:{persons:3,kcal:1800,weekStart:6,shopPersons:1},plans:{},checks:{},log:[],photos:{}};
 try{const raw=localStorage.getItem('pk_state');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 applyPhotos();
 const API=(localStorage.getItem('pk_api')||window.API_URL||'').trim();
@@ -419,7 +419,7 @@ function aggregate(plans){
   const items={},pantry={};
   plans.forEach(p=>p.days.forEach(d=>SLOTS.forEach(sl=>{
     const c=d[sl];if(!c.id||c.status==='skip')return;const m=M[c.id];if(!m)return;
-    const f=Number(S.settings.persons)/m.serves;
+    const f=shopN()/m.serves;
     m.ing.forEach(([n,q,u,a])=>{
       if(a==='توابل'||!q){pantry[n]=(pantry[n]||0)+1;return;}
       let qq=q*f,uu=u;if(u==='kg'){qq*=1000;uu='g';}
@@ -429,6 +429,7 @@ function aggregate(plans){
   })));
   return{items:Object.values(items),pantry};
 }
+const shopN=()=>Number(S.settings.shopPersons||1);
 function fmtQty(u,q){
   if(u==='g'){if(q>=1000)return fmtN(Math.ceil(q/250)*0.25)+' كجم';return num(Math.max(50,Math.ceil(q/50)*50))+' جم';}
   if(u==='ml'){if(q>=1000)return fmtN(Math.ceil(q/250)*0.25)+' لتر';return num(Math.ceil(q/50)*50)+' مل';}
@@ -470,7 +471,7 @@ async function pull(){
     const ph={};let needSeed=false;
     (j.meals||[]).forEach(x=>{ph[x.en]={photo:x.photo,contents:x.contents,link:x.link};if(BY_EN[x.en]&&!x.seeded)needSeed=true;});
     S.photos=ph;applyPhotos();
-    if(j.settings){['persons','kcal','weekStart'].forEach(k=>{if(j.settings[k]!==undefined&&j.settings[k]!=='')S.settings[k]=Number(j.settings[k]);});}
+    if(j.settings){['persons','kcal','weekStart','shopPersons'].forEach(k=>{if(j.settings[k]!==undefined&&j.settings[k]!=='')S.settings[k]=Number(j.settings[k]);});}
     const SLOT_KEY={'الفطار':'B','الغدا':'L','العشا':'D',B:'B',L:'L',D:'D'};
     const byWeek={};(j.plan||[]).forEach(r=>{(byWeek[r.week]=byWeek[r.week]||[]).push(r);});
     Object.entries(byWeek).forEach(([wk,rows])=>{
@@ -654,7 +655,7 @@ function vShop(){
   const order=AISLE_ORDER.filter(a=>groups[a]).concat(Object.keys(groups).filter(a=>!AISLE_ORDER.includes(a)));
   $v().innerHTML=`${header('قايمة المشتريات',sp.label,`<button class="iconbtn" onclick="shareList()" aria-label="مشاركة">📤</button>`)}
   <div class="seg fade"><button class="${ui.shop==='W'?'on':''}" onclick="ui.shop='W';render()">أسبوعي</button><button class="${ui.shop==='M'?'on':''}" onclick="ui.shop='M';render()">شهري</button></div>
-  <span class="muted" style="margin-inline-start:10px;font-size:13px">لـ ${num(S.settings.persons)} أفراد</span>
+  <span class="step" style="display:inline-flex;margin-inline-start:10px;vertical-align:middle"><button onclick="chg('shopPersons',-1)">−</button><b style="font-size:14px;min-width:auto;padding:0 4px">${shopN()===1?'فرد واحد':num(shopN())+' أفراد'}</b><button onclick="chg('shopPersons',1)">+</button></span>
   <div class="prog fade"><div class="bar"><i style="width:${total?got/total*100:0}%"></i></div><b>${num(got)}/${num(total)}</b></div>
   ${order.map(a=>`<div class="aisle fade"><h4>${AISLE_ICON[a]||'🛒'} ${a} <span>${num(groups[a].length)}</span></h4>
     ${groups[a].sort((x,y)=>(!!ch[x.n])-(!!ch[y.n])||x.n.localeCompare(y.n,'ar')).map(it=>`<button class="item ${ch[it.n]?'on':''}" onclick="toggleItem('${sp.key}',this.dataset.n)" data-n="${esc(it.n)}"><span class="bx">${ch[it.n]?'✓':''}</span><span class="nm"><b>${esc(it.n)}</b><small>${[...it.meals].slice(0,3).map(esc).join('، ')}${it.meals.size>3?' +'+num(it.meals.size-3):''}</small></span><span class="q">${Object.entries(it.u).map(([u,q])=>fmtQty(u,q)).join(' + ')}</span></button>`).join('')}
@@ -732,7 +733,7 @@ function vSet(){
     <div class="row"><label><b>رتّبي الأسبوع من الأول</b><small>اختياراتك المثبتة 📌 والوجبات اللي اتعملت مش هتتغير</small></label><button class="btn sm ghost" onclick="regenerate(weekKey(today()));toast('اتعمل ✓')">🔀 رتّبي</button></div>
   </div>`;
 }
-function chg(k,d){S.settings[k]=Math.max(1,Math.min(12,Number(S.settings[k])+d));persist();api({action:'settings',data:{[k]:S.settings[k]}});render();}
+function chg(k,d){S.settings[k]=Math.max(1,Math.min(12,Number(S.settings[k]||1)+d));persist();api({action:'settings',data:{[k]:S.settings[k]}});render();}
 function setK(k,v){
   S.settings[k]=Number(v);
   if(k==='weekStart'){S.plans={};}
