@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مطبخنا</title>
+<meta name="theme-color" content="#16213e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#16213e;--navy2:#22305a;--blue:#2f6bff;--blue-soft:#e8efff;
+  --bg:#f3f5fa;--card:#fff;--ink:#1b2235;--muted:#6b7488;--line:#e5e8f1;
+  --green:#14a05a;--green-soft:#e3f6ec;--amber:#f2a516;--amber-soft:#fff4dc;--red:#e5484d;--red-soft:#fde8e8;
+  --r:16px;--sh:0 1px 2px rgba(22,33,62,.05),0 6px 20px rgba(22,33,62,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-size:15px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font:inherit;color:inherit}
+.app{display:flex;min-height:100vh}
+/* ---------- sidebar ---------- */
+.side{width:240px;background:var(--navy);color:#cfd6ea;padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:20px;padding:4px 10px 18px}
+.brand i{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#3b7bff,#14a05a);display:grid;place-items:center;font-style:normal;font-size:19px}
+.nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;color:#cfd6ea;text-decoration:none;font-weight:500;transition:.15s}
+.nav a:hover{background:var(--navy2);color:#fff}
+.nav a.on{background:var(--blue);color:#fff;box-shadow:0 6px 16px rgba(47,107,255,.35)}
+.nav svg{width:20px;height:20px;flex-shrink:0}
+.side .foot{margin-top:auto;font-size:12px;opacity:.7;padding:10px}
+.sync{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#8a93a8}
+.dot.ok{background:#3ddc84}.dot.busy{background:var(--amber);animation:pulse 1s infinite}.dot.err{background:var(--red)}
+@keyframes pulse{50%{opacity:.35}}
+/* ---------- main ---------- */
+main{flex:1;min-width:0;padding:26px 30px 110px;max-width:1180px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.top h1{margin:0;font-size:24px;font-weight:700}
+.top .sub{color:var(--muted);font-size:14px;margin-top:2px}
+.iconbtn{width:40px;height:40px;border-radius:12px;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center}
+.iconbtn svg{width:20px;height:20px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:18px}
+.grid{display:grid;gap:16px}
+.h2{font-size:16px;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;justify-content:space-between}
+.h2 small{font-weight:500;color:var(--muted);font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;background:#f0f2f8;color:#4a5370;white-space:nowrap}
+.chip.g{background:var(--green-soft);color:#0d7a43}.chip.b{background:var(--blue-soft);color:#1f4fd1}.chip.a{background:var(--amber-soft);color:#9a6400}.chip.r{background:var(--red-soft);color:#b42328}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:12px;font-weight:600;background:var(--blue);color:#fff;transition:.15s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:#eef1f8;color:var(--ink)}
+.btn.green{background:var(--green)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.muted{color:var(--muted)}
+.fade{animation:fade .35s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;background:linear-gradient(135deg,#16213e 0%,#23376b 100%);color:#fff;border-radius:20px;padding:22px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;inset:auto -60px -80px auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(20,160,90,.35),transparent 70%)}
+.ring{position:relative;width:132px;height:132px}
+.ring svg{transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring b{font-size:26px;line-height:1}.ring span{font-size:12px;opacity:.75;margin-top:4px}
+.ring circle{transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;z-index:1}
+.kpi{background:rgba(255,255,255,.08);border-radius:14px;padding:12px}
+.kpi b{display:block;font-size:20px}.kpi span{font-size:12px;opacity:.75}
+.hero .msg{grid-column:1/-1;font-size:14px;background:rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;position:relative;z-index:1}
+/* ---------- meal cards ---------- */
+.meals3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.meal{background:var(--card);border-radius:18px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;transition:.2s;position:relative}
+.meal.next{outline:2px solid var(--blue);outline-offset:-2px}
+.meal.done .ph:after{content:"✓";position:absolute;inset:0;background:rgba(20,160,90,.55);display:grid;place-items:center;color:#fff;font-size:44px;font-weight:700}
+.meal.skip{opacity:.55}
+.ph{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,var(--g1),var(--g2));display:grid;place-items:center;overflow:hidden}
+.ph span{font-size:44px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15))}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph.sq{aspect-ratio:1;border-radius:12px;width:56px;flex-shrink:0}.ph.sq span{font-size:24px}
+.ph.sm{aspect-ratio:1;border-radius:10px;width:42px;flex-shrink:0}.ph.sm span{font-size:19px}
+.slotlbl{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);color:var(--navy);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;z-index:2}
+.pin{position:absolute;top:10px;left:10px;z-index:2;background:rgba(255,255,255,.92);border-radius:999px;padding:3px 8px;font-size:12px}
+.meal .body{padding:14px 14px 12px;display:flex;flex-direction:column;gap:9px;flex:1}
+.meal h3{margin:0;font-size:17px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.acts{display:flex;gap:6px;margin-top:auto;padding-top:4px}
+.acts button{flex:1;padding:9px 4px;border-radius:11px;background:#f0f2f8;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;gap:5px}
+.acts button.ok{background:var(--green-soft);color:#0d7a43}
+.acts button.sw{background:var(--blue-soft);color:#1f4fd1}
+.alert{display:flex;gap:12px;align-items:flex-start;background:var(--amber-soft);border-radius:14px;padding:12px 14px;margin-top:16px;font-size:14px}
+.alert b{display:block}
+.alert.g{background:var(--green-soft)}
+.strip{display:flex;gap:10px;align-items:center}
+.strip .t{display:flex;gap:8px;align-items:center;background:var(--card);border-radius:12px;padding:6px 10px 6px 6px;box-shadow:var(--sh);flex:1;min-width:0}
+.strip .t div{min-width:0}.strip .t small{display:block;color:var(--muted);font-size:11px}
+.strip .t b{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ---------- week ---------- */
+.weeknav{display:flex;align-items:center;gap:8px}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.day{background:var(--card);border-radius:16px;box-shadow:var(--sh);padding:12px 10px;display:flex;flex-direction:column;gap:8px}
+.day.today{outline:2px solid var(--blue)}
+.day.past{opacity:.6}
+.day .dh{display:flex;justify-content:space-between;align-items:baseline}
+.day .dh b{font-size:15px}.day .dh small{color:var(--muted);font-size:12px}
+.bar{height:6px;background:#eef1f8;border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px;background:var(--green);transition:width .8s}
+.slotrow{display:flex;gap:8px;align-items:center;padding:6px;border-radius:12px;background:#f7f8fc;text-align:right;width:100%;transition:.15s}
+.slotrow:hover{background:var(--blue-soft)}
+.slotrow div{min-width:0;flex:1}
+.slotrow small{display:block;font-size:11px;color:var(--muted)}
+.slotrow b{display:block;font-size:12.5px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.slotrow.done b{text-decoration:line-through;color:var(--muted)}
+.slotrow.flash{animation:flash 1.4s ease}
+@keyframes flash{0%,60%{background:#fff1c7}}
+/* ---------- shopping ---------- */
+.seg{display:inline-flex;background:#e9ecf5;border-radius:12px;padding:4px}
+.seg button{padding:8px 16px;border-radius:9px;font-weight:600;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:var(--sh)}
+.prog{display:flex;align-items:center;gap:12px;margin:16px 0}
+.prog .bar{flex:1;height:10px}
+.aisle{margin-bottom:14px}
+.aisle h4{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:8px}
+.aisle h4 span{color:var(--muted);font-weight:500;font-size:12px}
+.item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:var(--card);box-shadow:var(--sh);margin-bottom:6px;width:100%;text-align:right}
+.item .bx{width:22px;height:22px;border-radius:7px;border:2px solid #c9cfdd;display:grid;place-items:center;flex-shrink:0;transition:.15s}
+.item.on .bx{background:var(--green);border-color:var(--green);color:#fff}
+.item .nm{flex:1;min-width:0}
+.item .nm b{display:block;font-weight:600}
+.item .nm small{color:var(--muted);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .q{font-weight:700;color:var(--navy);white-space:nowrap}
+.item.on .nm b,.item.on .q{text-decoration:line-through;color:var(--muted)}
+.pantry{display:flex;flex-wrap:wrap;gap:8px}
+.pantry button{padding:7px 12px;border-radius:999px;background:var(--card);box-shadow:var(--sh);font-size:13px;font-weight:500}
+.pantry button.on{background:var(--green-soft);color:#0d7a43;text-decoration:line-through}
+/* ---------- library ---------- */
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:12px;box-shadow:var(--sh);padding:0 12px;flex:1}
+.search input{border:0;outline:0;padding:11px 0;flex:1;background:none}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.filters button{padding:7px 13px;border-radius:999px;background:var(--card);box-shadow:var(--sh);font-size:13px;font-weight:600;color:var(--muted)}
+.filters button.on{background:var(--navy);color:#fff}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.lib .meal h3{font-size:15px}
+/* ---------- stats ---------- */
+.stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat b{display:block;font-size:26px;font-weight:700;margin-top:4px}
+.stat span{color:var(--muted);font-size:13px}
+.stat .chip{margin-top:8px}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
+.hb{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
+.hb span{width:70px}.hb .bar{flex:1;height:10px}.hb b{width:28px;text-align:left}
+/* ---------- settings ---------- */
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row label b{display:block}.row label small{color:var(--muted)}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:34px;height:34px;border-radius:10px;background:#eef1f8;font-size:18px;font-weight:700}
+.step b{min-width:34px;text-align:center;font-size:17px}
+.inp{border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:110px;background:#fff}
+/* ---------- sheet / modal ---------- */
+.ov{position:fixed;inset:0;background:rgba(16,22,40,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:ovIn .2s}
+@keyframes ovIn{from{opacity:0}}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:90vh;border-radius:22px 22px 0 0;overflow:auto;animation:up .3s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom)}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.sheet .hd{position:sticky;top:0;background:var(--bg);padding:16px 18px 10px;z-index:3;display:flex;justify-content:space-between;align-items:center}
+.sheet .hd h3{margin:0;font-size:17px}
+.sheet .bd{padding:0 18px 22px}
+.grab{width:42px;height:5px;border-radius:9px;background:#cfd5e3;margin:8px auto 0}
+.alt{display:flex;gap:12px;align-items:center;background:var(--card);border-radius:14px;box-shadow:var(--sh);padding:10px;margin-bottom:8px;width:100%;text-align:right;transition:.15s}
+.alt:hover{outline:2px solid var(--blue-soft)}
+.alt .nm{flex:1;min-width:0}
+.alt .nm b{display:block;margin-bottom:5px}
+.alt .best{color:var(--blue);font-size:11px;font-weight:700}
+.detail .ph{aspect-ratio:16/9;border-radius:16px}
+.ing{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.ing b{font-weight:600}
+ol.steps{padding:0 18px 0 0;margin:0}
+ol.steps li{margin-bottom:9px;line-height:1.7}
+.gal{display:flex;gap:8px;overflow:auto}
+.gal img{height:120px;border-radius:10px;box-shadow:var(--sh)}
+.pick{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.pick button{padding:8px 2px;border-radius:10px;background:var(--card);box-shadow:var(--sh);font-size:12px;font-weight:600}
+.pick button.on{background:var(--navy);color:#fff}
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:80;max-width:92vw;width:440px;font-size:14px;animation:tin .3s}
+.toast ul{margin:6px 0 0;padding:0 18px 0 0;font-size:13px;opacity:.9}
+@keyframes tin{from{transform:translate(-50%,20px);opacity:0}}
+/* ---------- bottom nav ---------- */
+.tabs{display:none}
+@media (max-width:900px){
+  .side{display:none}
+  main{padding:16px 16px 100px}
+  .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:40;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .tabs a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 0;border-radius:12px}
+  .tabs a svg{width:22px;height:22px}
+  .tabs a.on{color:var(--blue)}
+  .meals3{grid-template-columns:1fr}
+  .meals3 .ph{aspect-ratio:2/1}
+  .meal.compact{flex-direction:row}
+  .days{grid-template-columns:1fr}
+  .day{display:grid;grid-template-columns:62px 1fr;align-items:start;gap:8px 10px}
+  .day .dh{flex-direction:column;align-items:flex-start;grid-row:span 4}
+  .day .bar{grid-column:2}
+  .stats4{grid-template-columns:repeat(2,1fr)}
+  .two{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .kpis{width:100%}
+  .top h1{font-size:21px}
+}
+@media (min-width:901px){.sheet{border-radius:22px;margin-bottom:5vh}.ov{align-items:center}
+  .day .slotrow{flex-direction:column;align-items:stretch;text-align:center;gap:6px}
+  .day .slotrow .ph.sm{width:100%;aspect-ratio:16/9}
+  .day .slotrow b{-webkit-line-clamp:3}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><i>🌿</i>مطبخنا</div>
+    <nav class="nav" id="sidenav"></nav>
+    <div class="foot"><span class="sync"><span class="dot" id="dot1"></span><span id="synctxt">محلي</span></span></div>
+  </aside>
+  <main id="view"></main>
+</div>
+<nav class="tabs" id="tabs"></nav>
+
+<script src="config.js"></script>
+<script src="data/meals.js"></script>
+<script>
+/* =========================================================
+   ثوابت
+========================================================= */
+const SLOTS=['B','L','D'];
+const SLOT_AR={B:'الفطار',L:'الغدا',D:'العشا'};
+const DAYS=['الأحد','الاتنين','التلات','الأربع','الخميس','الجمعة','السبت'];
+const MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const GROUP={
+  legume:{ar:'بقوليات',e:'🫘',c1:'#f6d9a8',c2:'#e9a75f'},
+  grain:{ar:'حبوب',e:'🌾',c1:'#f8e7b0',c2:'#e4c45e'},
+  soup:{ar:'شوربة',e:'🍲',c1:'#ffd2c2',c2:'#f08a6a'},
+  salad:{ar:'سلطة',e:'🥗',c1:'#d4f2c9',c2:'#79c86b'},
+  veg:{ar:'خضار',e:'🥦',c1:'#c9efdc',c2:'#4fb985'},
+  stuffed:{ar:'محشي',e:'🫑',c1:'#d8edc0',c2:'#8fbf4d'},
+  sweet:{ar:'حلو',e:'🥞',c1:'#f8dfe9',c2:'#e48fb0'},
+  fruit:{ar:'فاكهة',e:'🍓',c1:'#ffd9de',c2:'#f17589'}
+};
+const AISLE_ICON={'خضار':'🥕','فاكهة':'🍌','بقوليات':'🫘','حبوب ونشويات':'🌾','مكسرات وبذور':'🥜','زيوت وصوصات':'🫒','ألبان نباتية':'🥛','أعشاب طازة':'🌿','مخبوزات':'🍞','معلبات':'🥫','توابل':'🧂'};
+const AISLE_ORDER=['خضار','أعشاب طازة','فاكهة','بقوليات','حبوب ونشويات','مخبوزات','ألبان نباتية','معلبات','مكسرات وبذور','زيوت وصوصات'];
+const UNIT={g:'جم',ml:'مل',pc:'حبة',clove:'فص',bunch:'حزمة',can:'علبة',cup:'كوب',tbsp:'م.ك',tsp:'م.ص',kg:'كجم'};
+const PREP_AHEAD={falafel:'انقعي الفول المدشوش من بالليل',whitebeans:'انقعي الفاصوليا البيضا من بالليل',lobia:'انقعي اللوبيا من بالليل',bolognese:'انقعي عين الجمل 5 ساعات',smoothie:'فرّزي الموز من بالليل',mangoquinoa:'انقعي الكينوا ساعة قبل السلق',spburger:'اشوي البطاطا بدري'};
+const FAM={bolognese:'sauce',potatoskins:'sauce',mushburger:'burger',spburger:'burger',medquinoa:'quinoa',mangoquinoa:'quinoa',hummus:'chick',avowrap:'chick',chickeggless:'chick',mahshi:'stuff',stuffedzuc:'stuff',eggplant:'stuff',lentilsoup:'lentil',spicedlentils:'lentil',potatosand:'potato',potatoskins2:'potato'};
+const SNACKS=[['حفنة لوز (25 جم)',145],['موزة',105],['تمرتين + عين جمل',120],['تفاحة',80],['توست بزبدة فول سوداني',190],['حمص محمص (ربع كوب)',130],['زبادي نباتي بالفاكهة',150]];
+const ICONS={
+  today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  week:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>',
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 7h14l-1.5 11a2 2 0 0 1-2 1.7h-7A2 2 0 0 1 6.5 18z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
+  meals:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7c0-2 2-2 2-4M13 7c0-2 2-2 2-4"/></svg>',
+  stats:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  set:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.3 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.3l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.7 7l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  swap:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 3l4 4-4 4M21 7H8M7 21l-4-4 4-4M3 17h13"/></svg>',
+  x:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+};
+const ROUTES=[['today','النهارده'],['week','الأسبوع'],['shop','المشتريات'],['meals','الوجبات'],['stats','الإحصائيات'],['set','الإعدادات']];
+
+/* =========================================================
+   الحالة
+========================================================= */
+const M={}; MEALS.forEach(m=>{M[m.id]=m;m.photo='';m.contents=[];m.link='';});
+const BY_EN={}; MEALS.forEach(m=>BY_EN[m.en]=m);
+let S={settings:{persons:3,kcal:1800,weekStart:6},plans:{},checks:{},log:[],photos:{}};
+try{const raw=localStorage.getItem('pk_state');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+applyPhotos();
+const API=(localStorage.getItem('pk_api')||window.API_URL||'').trim();
+let ui={shop:'W',lib:'all',libq:'',weekOffset:0};
+
+function persist(){try{localStorage.setItem('pk_state',JSON.stringify(S));}catch(e){}}
+function applyPhotos(){Object.entries(S.photos||{}).forEach(([en,v])=>{const m=BY_EN[en];if(m){m.photo=v.photo||'';m.contents=v.contents||[];m.link=v.link||'';}});}
+
+/* =========================================================
+   تواريخ
+========================================================= */
+const pad=n=>String(n).padStart(2,'0');
+const ds=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c);};
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ds(d);};
+const today=()=>ds(new Date());
+function weekKey(s){const d=pd(s);const diff=(d.getDay()-Number(S.settings.weekStart)+7)%7;d.setDate(d.getDate()-diff);return ds(d);}
+const dayName=s=>DAYS[pd(s).getDay()];
+const nice=s=>{const d=pd(s);return d.getDate()+' '+MONTHS[d.getMonth()];};
+
+/* =========================================================
+   أدوات
+========================================================= */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hash(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const num=n=>Math.round(n).toLocaleString('ar-EG');
+const fmtN=n=>{const r=Math.round(n*10)/10;return (Number.isInteger(r)?r:r.toFixed(1)).toLocaleString('ar-EG');};
+
+function photoBox(m,cls){const g=GROUP[m.group];return `<div class="ph ${cls||''}" style="--g1:${g.c1};--g2:${g.c2}"><span>${g.e}</span>${m.photo?`<img src="${esc(m.photo)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" alt="">`:''}</div>`;}
+
+/* =========================================================
+   المخطط الذكي
+========================================================= */
+function emptyWeek(wk){return{days:Array.from({length:7},(_,i)=>{const d={date:addD(wk,i)};SLOTS.forEach(s=>d[s]={id:null,status:'planned',locked:false});return d;})};}
+function prevWeekTail(wk){const p=S.plans[addD(wk,-7)];if(!p)return[];return p.days.slice(-2);}
+
+function scoreMeal(m,plan,di,slot,rand){
+  if(!m||!m.slots.includes(slot))return -1e9;
+  let s=0;const day=plan.days[di];
+  const tail=prevWeekTail(plan.days[0].date);
+  const all=[...tail.map((d,i)=>({d,j:i-tail.length})),...plan.days.map((d,j)=>({d,j}))];
+  for(const {d,j} of all){for(const sl of SLOTS){
+    if(j===di&&sl===slot)continue;const c=d[sl];if(!c||!c.id)continue;const o=M[c.id];if(!o)continue;
+    const dist=Math.abs(j-di);
+    if(c.id===m.id) s-= dist<=2?220:(dist<=4?110:70);
+    if(j===di&&o.group===m.group) s-=26;
+    if(FAM[m.id]&&FAM[m.id]===FAM[o.id]) s-= dist===0?60:(dist===1?25:8);
+    if(dist===1&&sl===slot&&o.group===m.group) s-=10;
+  }}
+  // السعرات: قرّب الوجبات الثلاثة من 85% من الهدف (الباقي سناكس)
+  const tgt=Number(S.settings.kcal)*0.85;
+  let known=0,unk=0;
+  SLOTS.forEach(x=>{if(x===slot)return;const c=day[x];if(c&&c.id&&M[c.id])known+=M[c.id].kcal;else unk++;});
+  s-=Math.abs(known+m.kcal+unk*(tgt/3)-tgt)/28;
+  if(slot!=='B'&&m.p>=14)s+=7;
+  // توازن الأسبوع
+  const cnt={};plan.days.forEach((d,j)=>SLOTS.forEach(sl=>{if(j===di&&sl===slot)return;const c=d[sl];if(c&&c.id&&M[c.id])cnt[M[c.id].group]=(cnt[M[c.id].group]||0)+1;}));
+  if(m.group==='legume'&&(cnt.legume||0)<6)s+=6;
+  if(m.group==='soup'&&(cnt.soup||0)>=3)s-=16;
+  if(m.group==='stuffed'&&(cnt.stuffed||0)>=2)s-=22;
+  if(m.group==='sweet'&&(cnt.sweet||0)>=2)s-=14;
+  if(m.group==='fruit'&&(cnt.fruit||0)>=2)s-=10;
+  // الويكند للأكلات الطويلة
+  const dow=pd(day.date).getDay();const wkend=dow===5||dow===6;
+  if(m.prep>=60)s+=wkend?12:-14;
+  if(!wkend&&m.prep<=20)s+=3;
+  if(rand)s+=rand()*11;
+  return s;
+}
+function bestFor(plan,di,slot,rand,exclude){
+  let best=null,bs=-1e12;
+  for(const m of MEALS){if(exclude&&exclude.includes(m.id))continue;const sc=scoreMeal(m,plan,di,slot,rand);if(sc>bs){bs=sc;best=m.id;}}
+  return best;
+}
+function fillWeek(wk,plan,fromDate){
+  const rand=rng(hash(wk+':'+(plan.seed||0)));
+  plan.days.forEach((d,di)=>{if(fromDate&&d.date<fromDate)return;SLOTS.forEach(sl=>{const c=d[sl];if(!c.id)c.id=bestFor(plan,di,sl,rand);});});
+  return plan;
+}
+function ensureWeek(wk){
+  if(!S.plans[wk]||!S.plans[wk].days){S.plans[wk]=fillWeek(wk,emptyWeek(wk));persist();queueSave(wk);}
+  return S.plans[wk];
+}
+function regenerate(wk){
+  const plan=ensureWeek(wk);const t=today();
+  plan.seed=(plan.seed||0)+1;
+  plan.days.forEach(d=>{if(d.date<t)return;SLOTS.forEach(sl=>{const c=d[sl];if(!c.locked&&c.status!=='done')c.id=null;});});
+  fillWeek(wk,plan,t);persist();queueSave(wk);
+}
+
+/* التبديل + إعادة توافق باقي الأسبوع */
+function applySwap(wk,di,slot,newId){
+  const plan=ensureWeek(wk);const cell=plan.days[di][slot];const oldId=cell.id;
+  if(oldId===newId)return{changes:[]};
+  cell.id=newId;cell.locked=true;cell.status='planned';
+  const t=today();const changes=[];
+  const editable=(j,sl)=>!(j===di&&sl===slot)&&plan.days[j].date>=t&&!plan.days[j][sl].locked&&plan.days[j][sl].status!=='done';
+  const key=(j,sl)=>j+sl;
+  let conf=new Map();
+  plan.days.forEach((d,j)=>SLOTS.forEach(sl=>{if(editable(j,sl)&&d[sl].id===newId)conf.set(key(j,sl),[j,sl,'عشان متتكررش']);}));
+  SLOTS.forEach(sl=>{if(sl!==slot&&editable(di,sl)&&M[plan.days[di][sl].id]&&M[plan.days[di][sl].id].group===M[newId].group)conf.set(key(di,sl),[di,sl,'تنويع في نفس اليوم']);});
+  // الوجبة اللي اتشالت تتنقل لأنسب يوم
+  const inWeek=id=>plan.days.some(d=>SLOTS.some(sl=>d[sl].id===id));
+  if(oldId&&M[oldId]&&!inWeek(oldId)){
+    let best=null;
+    plan.days.forEach((d,j)=>{if(j<di)return;M[oldId].slots.forEach(sl=>{
+      if(!editable(j,sl))return;const cur=d[sl].id;const isC=conf.has(key(j,sl));
+      const sNew=scoreMeal(M[oldId],plan,j,sl);const sCur=isC?-300:scoreMeal(M[cur],plan,j,sl);
+      const gain=sNew-sCur+(isC?40:0)-(j-di)*0.5;
+      if(sNew>-150&&(!best||gain>best.gain))best={j,sl,gain,cur};
+    });});
+    if(best&&best.gain>-25){
+      plan.days[best.j][best.sl].id=oldId;
+      changes.push({j:best.j,sl:best.sl,from:best.cur,to:oldId,why:'اتنقلت من '+(best.j===di?'نفس اليوم':dayName(plan.days[di].date))});
+      conf.delete(key(best.j,best.sl));
+    }
+  }
+  conf.forEach(([j,sl,why])=>{const cur=plan.days[j][sl].id;const b=bestFor(plan,j,sl,null,[cur,newId]);if(b&&b!==cur){plan.days[j][sl].id=b;changes.push({j,sl,from:cur,to:b,why});}});
+  persist();queueSave(wk);
+  const txt=changes.map(c=>`${dayName(plan.days[c.j].date)} ${SLOT_AR[c.sl]}: ${M[c.to].ar}`).join(' | ');
+  S.log.push({t:Date.now(),date:plan.days[di].date,slot,from:oldId,to:newId});persist();
+  api({action:'log',date:plan.days[di].date,slot:SLOT_AR[slot],from:oldId?M[oldId].ar:'',to:M[newId].ar,changes:txt});
+  return{oldId,changes,plan};
+}
+
+/* أسباب البدايل */
+function reasons(m,plan,di,slot,shopSet){
+  const r=[];const day=plan.days[di];
+  if(m.prep<=20)r.push(['⏱ سريعة','b']);
+  if(m.kcal<=250)r.push(['خفيفة','g']);
+  if(m.p>=15)r.push(['💪 بروتين عالي','a']);
+  const dow=pd(day.date).getDay();if(m.prep>=60&&(dow===5||dow===6))r.push(['تنفع للويكند','b']);
+  if(shopSet){const ing=m.ing.filter(x=>x[3]!=='توابل'&&x[1]>0);const have=ing.filter(x=>shopSet.has(x[0])).length;if(ing.length&&have/ing.length>=.7)r.push(['🛒 مكوناتها في القايمة','g']);}
+  const y=plan.days[di-1];if(y&&y[slot].id&&M[y[slot].id].group!==m.group&&!SLOTS.some(s=>s!==slot&&day[s].id&&M[day[s].id].group===m.group))r.push(['تنويع','']);
+  return r.slice(0,3);
+}
+
+/* =========================================================
+   المشتريات
+========================================================= */
+function aggregate(plans){
+  const items={},pantry={};
+  plans.forEach(p=>p.days.forEach(d=>SLOTS.forEach(sl=>{
+    const c=d[sl];if(!c.id||c.status==='skip')return;const m=M[c.id];if(!m)return;
+    const f=Number(S.settings.persons)/m.serves;
+    m.ing.forEach(([n,q,u,a])=>{
+      if(a==='توابل'||!q){pantry[n]=(pantry[n]||0)+1;return;}
+      let qq=q*f,uu=u;if(u==='kg'){qq*=1000;uu='g';}
+      const it=items[n]||(items[n]={n,a,u:{},meals:new Set()});
+      it.u[uu]=(it.u[uu]||0)+qq;it.meals.add(m.ar);
+    });
+  })));
+  return{items:Object.values(items),pantry};
+}
+function fmtQty(u,q){
+  if(u==='g'){if(q>=1000)return fmtN(Math.ceil(q/250)*0.25)+' كجم';return num(Math.max(50,Math.ceil(q/50)*50))+' جم';}
+  if(u==='ml'){if(q>=1000)return fmtN(Math.ceil(q/250)*0.25)+' لتر';return num(Math.ceil(q/50)*50)+' مل';}
+  if(u==='tbsp'&&q>=16)return fmtN(Math.ceil(q/8)/2)+' كوب';
+  if(u==='tsp'&&q>=48)return fmtN(Math.ceil(q/24)/2)+' كوب';
+  if(u==='cup')return fmtN(Math.ceil(q*2)/2)+' كوب';
+  return num(Math.ceil(q))+' '+UNIT[u];
+}
+function shopPlans(scope){
+  const wk=weekKey(today());
+  if(scope==='W')return{key:'W:'+wk,plans:[ensureWeek(wk)],label:'من '+nice(wk)+' لـ '+nice(addD(wk,6))};
+  const ws=[0,7,14,21].map(n=>addD(wk,n));
+  return{key:'M:'+wk,plans:ws.map(ensureWeek),label:'4 أسابيع لحد '+nice(addD(wk,27))};
+}
+
+/* =========================================================
+   مزامنة
+========================================================= */
+let saveTimers={};let pending=0;
+function setSync(st,txt){['dot1'].forEach(id=>{const e=document.getElementById(id);if(e)e.className='dot '+st;});const t=document.getElementById('synctxt');if(t)t.textContent=txt;}
+async function api(body){
+  if(!API)return;
+  pending++;setSync('busy','بيحفظ...');
+  try{const r=await fetch(API,{method:'POST',body:JSON.stringify(body)});await r.text();setSync('ok','متزامن مع الشيت');}
+  catch(e){setSync('err','مفيش اتصال');}
+  finally{pending--;}
+}
+function queueSave(wk){
+  if(!API)return;clearTimeout(saveTimers[wk]);
+  saveTimers[wk]=setTimeout(()=>{const p=S.plans[wk];if(!p)return;
+    const rows=[];p.days.forEach(d=>SLOTS.forEach(sl=>{const c=d[sl];if(!c.id)return;rows.push({date:d.date,day:dayName(d.date),slot:SLOT_AR[sl],id:c.id,ar:M[c.id].ar,kcal:M[c.id].kcal,status:c.status,locked:c.locked});}));
+    api({action:'savePlan',week:wk,rows});},900);
+}
+async function pull(){
+  if(!API){setSync('','محلي (من غير شيت)');return;}
+  setSync('busy','بيحمّل...');
+  try{
+    const r=await fetch(API+'?action=all');const j=await r.json();if(!j.ok)throw 0;
+    const ph={};let needSeed=false;
+    (j.meals||[]).forEach(x=>{ph[x.en]={photo:x.photo,contents:x.contents,link:x.link};if(BY_EN[x.en]&&!x.seeded)needSeed=true;});
+    S.photos=ph;applyPhotos();
+    if(j.settings){['persons','kcal','weekStart'].forEach(k=>{if(j.settings[k]!==undefined&&j.settings[k]!=='')S.settings[k]=Number(j.settings[k]);});}
+    const SLOT_KEY={'الفطار':'B','الغدا':'L','العشا':'D',B:'B',L:'L',D:'D'};
+    const byWeek={};(j.plan||[]).forEach(r=>{(byWeek[r.week]=byWeek[r.week]||[]).push(r);});
+    Object.entries(byWeek).forEach(([wk,rows])=>{
+      if(saveTimers[wk])return;
+      const p=S.plans[wk]&&S.plans[wk].days?S.plans[wk]:emptyWeek(wk);
+      rows.forEach(r=>{const di=p.days.findIndex(d=>d.date===r.date);const sl=SLOT_KEY[r.slot];if(di<0||!sl||!M[r.id])return;p.days[di][sl]={id:r.id,status:r.status||'planned',locked:!!r.locked};});
+      fillWeek(wk,p);S.plans[wk]=p;
+    });
+    Object.entries(j.shop||{}).forEach(([k,v])=>{S.checks[k]=Object.assign(S.checks[k]||{},v);});
+    persist();setSync('ok','متزامن مع الشيت');render();
+    if(needSeed)api({action:'seed',meals:MEALS.map(m=>({id:m.id,en:m.en,ar:m.ar,slots:m.slots,group:GROUP[m.group].ar,kcal:m.kcal,p:m.p,prep:m.prep,serves:m.serves,ingText:m.ing.map(x=>x[1]?`${x[0]} ${x[1]} ${UNIT[x[2]]||''}`.trim():x[0]).join('، ')}))});
+    const wk=weekKey(today());if(!byWeek[wk])queueSave(wk);
+  }catch(e){setSync('err','مش قادر يوصل للشيت');}
+}
+
+/* =========================================================
+   الواجهة
+========================================================= */
+const $v=()=>document.getElementById('view');
+function navHTML(){const r=route();return ROUTES.map(([k,t])=>`<a href="#${k}" class="${r===k?'on':''}">${ICONS[k]}<span>${t}</span></a>`).join('');}
+function route(){const h=location.hash.slice(1);return ROUTES.some(x=>x[0]===h)?h:'today';}
+function render(){
+  document.getElementById('sidenav').innerHTML=navHTML();
+  document.getElementById('tabs').innerHTML=ROUTES.filter(x=>x[0]!=='set').map(([k,t])=>`<a href="#${k}" class="${route()===k?'on':''}">${ICONS[k]}<span>${t}</span></a>`).join('');
+  ({today:vToday,week:vWeek,shop:vShop,meals:vMeals,stats:vStats,set:vSet})[route()]();
+  window.scrollTo({top:0});
+}
+function header(title,sub,extra){return `<div class="top fade"><div><h1>${title}</h1>${sub?`<div class="sub">${sub}</div>`:''}</div><div style="display:flex;gap:8px">${extra||''}<a class="iconbtn" href="#set" aria-label="الإعدادات">${ICONS.set}</a></div></div>`;}
+function nextSlot(){const h=new Date().getHours();return h<11?'B':h<17?'L':'D';}
+function dayKcal(d){return SLOTS.reduce((a,s)=>a+(d[s].id&&d[s].status!=='skip'?M[d[s].id].kcal:0),0);}
+function dayProt(d){return SLOTS.reduce((a,s)=>a+(d[s].id&&d[s].status!=='skip'?M[d[s].id].p:0),0);}
+function variety(plan){const ids=[];plan.days.forEach(d=>SLOTS.forEach(s=>{if(d[s].id)ids.push(d[s].id);}));return ids.length?Math.round(new Set(ids).size/ids.length*100):0;}
+
+/* ---------- النهارده ---------- */
+function vToday(){
+  const t=today(),wk=weekKey(t),plan=ensureWeek(wk);const di=plan.days.findIndex(d=>d.date===t);const day=plan.days[di];
+  const tgt=Number(S.settings.kcal);const done=SLOTS.reduce((a,s)=>a+(day[s].status==='done'?M[day[s].id].kcal:0),0);
+  const planned=dayKcal(day),prot=dayProt(day),nDone=SLOTS.filter(s=>day[s].status==='done').length;
+  const C=2*Math.PI*56;const pct=Math.min(1,done/tgt);
+  const h=new Date().getHours();const hi=h<12?'صباح الخير':'مساء الخير';
+  const ns=nextSlot();
+  let msg;
+  if(nDone===3)msg='🎉 خلّصتي وجبات النهارده كلها، برافو عليكي!';
+  else if(planned<tgt*0.8)msg=`🍎 الوجبات المخططة ${num(planned)} سعرة، ناقص حوالي ${num(tgt-planned)} سعرة ممكن تكمليهم بسناك.`;
+  else if(planned>tgt*1.1)msg=`⚖️ النهارده تقيل شوية (${num(planned)} سعرة)، ممكن تبدّلي العشا بحاجة أخف.`;
+  else msg='✨ يومك متوازن، السعرات قريبة من الهدف.';
+  // تجهيزات بكرة
+  const tmr=addD(t,1);const tp=ensureWeek(weekKey(tmr));const td=tp.days.find(d=>d.date===tmr);
+  const prepTmr=SLOTS.map(s=>td[s].id).filter(id=>PREP_AHEAD[id]).map(id=>`${PREP_AHEAD[id]} (${M[id].ar})`);
+  const prepToday=SLOTS.map(s=>day[s]).filter(c=>c.status==='planned'&&M[c.id].prep>=50).map(c=>M[c.id].ar);
+  // سناكس
+  let gap=tgt-planned,snk=[],k=pd(t).getDate()%SNACKS.length;
+  for(let i=0;i<SNACKS.length&&gap>70&&snk.length<3;i++){const s=SNACKS[(k+i)%SNACKS.length];snk.push(s);gap-=s[1];}
+  $v().innerHTML=`
+  ${header(hi+' 🌿',dayName(t)+'، '+nice(t))}
+  <section class="hero fade">
+    <div class="ring"><svg width="132" height="132"><circle cx="66" cy="66" r="56" stroke="rgba(255,255,255,.13)" stroke-width="12" fill="none"/>
+      <circle id="ringc" cx="66" cy="66" r="56" stroke="#3ddc84" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg>
+      <div class="c"><b>${num(done)}</b><span>من ${num(tgt)} سعرة</span></div></div>
+    <div class="kpis">
+      <div class="kpi"><b>${num(planned)}</b><span>سعرات اليوم</span></div>
+      <div class="kpi"><b>${num(prot)} جم</b><span>بروتين</span></div>
+      <div class="kpi"><b>${num(nDone)}/٣</b><span>وجبات خلصت</span></div>
+    </div>
+    <div class="msg">${msg}</div>
+  </section>
+  <div class="h2">وجبات النهارده <small>تنوع الأسبوع ${num(variety(plan))}٪</small></div>
+  <div class="meals3">${SLOTS.map(s=>mealCard(day[s],s,di,wk,s===ns&&day[s].status==='planned')).join('')}</div>
+  ${prepToday.length?`<div class="alert fade"><span>⏰</span><div><b>ابدئي بدري</b>${prepToday.map(esc).join('، ')} بتاخد وقت.</div></div>`:''}
+  ${prepTmr.length?`<div class="alert fade"><span>🫙</span><div><b>جهّزي لبكرة</b>${prepTmr.map(esc).join('<br>')}</div></div>`:''}
+  ${snk.length&&nDone<3?`<div class="alert g fade"><span>🥜</span><div><b>سناك يكمّل يومك</b>${snk.map(s=>`${s[0]} (${num(s[1])})`).join(' + ')}</div></div>`:''}
+  <div class="h2">بكرة <small>${dayName(tmr)}</small></div>
+  <div class="strip">${SLOTS.map(s=>{const m=M[td[s].id];return `<button class="t" onclick="openDetail('${m.id}')">${photoBox(m,'sm')}<div><small>${SLOT_AR[s]}</small><b>${esc(m.ar)}</b></div></button>`;}).join('')}</div>`;
+  requestAnimationFrame(()=>{const c=document.getElementById('ringc');if(c)c.style.strokeDashoffset=C*(1-pct);});
+}
+function mealCard(c,s,di,wk,isNext){
+  const m=M[c.id];
+  return `<article class="meal fade ${c.status==='done'?'done':''} ${c.status==='skip'?'skip':''} ${isNext?'next':''}">
+    <div style="position:relative" onclick="openDetail('${m.id}')">${photoBox(m)}<span class="slotlbl">${isNext?'الجاية • ':''}${SLOT_AR[s]}</span>${c.locked?'<span class="pin">📌 اختيارك</span>':''}</div>
+    <div class="body">
+      <h3>${esc(m.ar)}</h3>
+      <div class="chips"><span class="chip g">🔥 ${num(m.kcal)} سعرة</span><span class="chip a">💪 ${num(m.p)} جم</span><span class="chip b">⏱ ${num(m.prep)} د</span></div>
+      <div class="acts">
+        <button class="ok" onclick="setStatus('${wk}',${di},'${s}','${c.status==='done'?'planned':'done'}')">${c.status==='done'?'↺ رجّعي':'✓ اتعملت'}</button>
+        <button class="sw" onclick="openSwap('${wk}',${di},'${s}')">${ICONS.swap} بدّلي</button>
+        <button onclick="openDetail('${m.id}')">📖 الوصفة</button>
+      </div>
+    </div></article>`;
+}
+function setStatus(wk,di,s,st){const p=ensureWeek(wk);p.days[di][s].status=st;persist();queueSave(wk);render();if(st==='done')toast('✓ تمام، اتسجلت');}
+
+/* ---------- الأسبوع ---------- */
+function vWeek(){
+  const t=today();const wk=addD(weekKey(t),ui.weekOffset*7);const plan=ensureWeek(wk);const tgt=Number(S.settings.kcal);
+  const tot=plan.days.reduce((a,d)=>a+dayKcal(d),0);
+  $v().innerHTML=`${header('خطة الأسبوع',nice(wk)+' — '+nice(addD(wk,6)),`<div class="weeknav"><button class="iconbtn" onclick="ui.weekOffset--;render()" aria-label="الأسبوع اللي فات">›</button><button class="iconbtn" onclick="ui.weekOffset++;render()" aria-label="الأسبوع الجاي">‹</button></div>`)}
+  <div class="chips fade" style="margin-bottom:14px"><span class="chip g">متوسط ${num(tot/7)} سعرة/يوم</span><span class="chip b">تنوع ${num(variety(plan))}٪</span><span class="chip a">${num(plan.days.reduce((a,d)=>a+SLOTS.filter(s=>d[s].id&&M[d[s].id].group==='legume').length,0))} وجبات بقوليات</span>
+  <button class="btn sm ghost" style="margin-inline-start:auto" onclick="regenerate('${wk}');render();toast('اترتّب الأسبوع من جديد (اختياراتك 📌 زي ما هي)')">🔀 رتّبيلي الأسبوع</button></div>
+  <div class="days">${plan.days.map((d,di)=>{const k=dayKcal(d);return `<div class="day fade ${d.date===t?'today':''} ${d.date<t?'past':''}" style="animation-delay:${di*40}ms">
+    <div class="dh"><b>${dayName(d.date)}</b><small>${nice(d.date)}</small></div>
+    <div class="bar" title="${num(k)} سعرة"><i style="width:${Math.min(100,k/tgt*100)}%;background:${k>tgt*1.1?'var(--amber)':'var(--green)'}"></i></div>
+    ${SLOTS.map(s=>{const c=d[s];const m=M[c.id];return `<button class="slotrow ${c.status==='done'?'done':''}" id="sr-${di}${s}" onclick="openSwap('${wk}',${di},'${s}')">${photoBox(m,'sm')}<div><small>${SLOT_AR[s]}${c.locked?' 📌':''}${c.status==='done'?' ✓':''}</small><b>${esc(m.ar)}</b></div></button>`;}).join('')}
+  </div>`;}).join('')}</div>`;
+}
+
+/* ---------- البدايل ---------- */
+let swapCtx=null;
+function openSwap(wk,di,slot){
+  swapCtx={wk,di,slot,f:'all',q:''};drawSwap();
+}
+function drawSwap(){
+  const {wk,di,slot,f,q}=swapCtx;const plan=ensureWeek(wk);const cur=plan.days[di][slot].id;
+  const shop=aggregate([plan]);const shopSet=new Set(shop.items.map(i=>i.n));
+  let list=MEALS.filter(m=>m.id!==cur&&m.slots.includes(slot)).map(m=>({m,s:scoreMeal(m,plan,di,slot)}));
+  if(f==='fast')list=list.filter(x=>x.m.prep<=20);
+  if(f==='light')list=list.filter(x=>x.m.kcal<=280);
+  if(f==='prot')list=list.filter(x=>x.m.p>=14);
+  if(f==='any')list=MEALS.filter(m=>m.id!==cur).map(m=>({m,s:m.slots.includes(slot)?scoreMeal(m,plan,di,slot):-500}));
+  if(q)list=list.filter(x=>x.m.ar.includes(q)||x.m.en.toLowerCase().includes(q.toLowerCase()));
+  list.sort((a,b)=>b.s-a.s);
+  const cm=M[cur];
+  sheet(`بدايل ${SLOT_AR[slot]} — ${dayName(plan.days[di].date)}`,`
+    <div class="alt" style="outline:2px solid var(--line);cursor:default">${photoBox(cm,'sq')}<div class="nm"><small class="muted">الحالية</small><b>${esc(cm.ar)}</b></div><button class="btn sm ghost" onclick="closeSheet();openDetail('${cm.id}')">الوصفة</button></div>
+    <div class="search" style="margin:10px 0"><span>🔎</span><input placeholder="دوّري على وجبة..." value="${esc(q)}" oninput="swapCtx.q=this.value;clearTimeout(window._sq);window._sq=setTimeout(()=>{drawSwap();const i=document.querySelector('.sheet input');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length);}},250)"></div>
+    <div class="filters" style="margin:6px 0 12px">${[['all','الأنسب'],['fast','سريعة'],['light','خفيفة'],['prot','بروتين عالي'],['any','أي وجبة']].map(([k,t])=>`<button class="${f===k?'on':''}" onclick="swapCtx.f='${k}';drawSwap()">${t}</button>`).join('')}</div>
+    ${list.slice(0,f==='any'||q?40:10).map((x,i)=>{const r=reasons(x.m,plan,di,slot,shopSet);return `<button class="alt" onclick="doSwap('${x.m.id}')">${photoBox(x.m,'sq')}<div class="nm">${i===0&&f==='all'&&!q?'<span class="best">⭐ الأنسب للأسبوع</span>':''}<b>${esc(x.m.ar)}</b><div class="chips"><span class="chip g">${num(x.m.kcal)} سعرة</span>${r.map(c=>`<span class="chip ${c[1]}">${c[0]}</span>`).join('')}</div></div><span style="font-size:20px;color:var(--blue)">‹</span></button>`;}).join('')||'<p class="muted">مفيش نتايج</p>'}`);
+}
+function doSwap(id){
+  const {wk,di,slot}=swapCtx;closeSheet();
+  const res=applySwap(wk,di,slot,id);
+  render();
+  const lines=res.changes.map(c=>`<li>${dayName(res.plan.days[c.j].date)} ${SLOT_AR[c.sl]} ← ${esc(M[c.to].ar)} <span style="opacity:.7">(${c.why})</span></li>`).join('');
+  toast(`✓ ${esc(M[id].ar)} بقت ${SLOT_AR[slot]} ${dayName(res.plan.days[di].date)}${lines?'<br><b>واتظبط باقي الأسبوع:</b><ul>'+lines+'</ul>':''}`,lines?6500:2600);
+  res.changes.forEach(c=>{const e=document.getElementById('sr-'+c.j+c.sl);if(e)e.classList.add('flash');});
+}
+
+/* ---------- تفاصيل وجبة ---------- */
+function openDetail(id,fromLib){
+  const m=M[id];const f=Number(S.settings.persons)/m.serves;
+  const main=m.ing.filter(x=>x[3]!=='توابل'&&x[1]>0),sp=m.ing.filter(x=>x[3]==='توابل'||!x[1]);
+  sheet(esc(m.ar),`<div class="detail">
+    ${photoBox(m)}
+    <div class="chips" style="margin:12px 0"><span class="chip g">🔥 ${num(m.kcal)} سعرة للفرد</span><span class="chip a">💪 ${num(m.p)} جم بروتين</span><span class="chip b">⏱ ${num(m.prep)} دقيقة</span><span class="chip">${GROUP[m.group].e} ${GROUP[m.group].ar}</span><span class="chip">${m.slots.map(s=>SLOT_AR[s]).join(' / ')}</span></div>
+    ${PREP_AHEAD[m.id]?`<div class="alert" style="margin:0 0 12px"><span>🫙</span><div>${PREP_AHEAD[m.id]}</div></div>`:''}
+    <div class="card"><div class="h2" style="margin:0 0 6px">المكونات <small>لـ ${num(S.settings.persons)} أفراد</small></div>
+      ${main.map(([n,q,u])=>{let qq=q*f,uu=u;if(u==='kg'){qq*=1000;uu='g';}return `<div class="ing"><span>${esc(n)}</span><b>${fmtQty(uu,qq)}</b></div>`;}).join('')}
+      ${sp.length?`<div class="ing" style="border:0"><span class="muted">توابل وإضافات</span><b style="font-weight:500">${sp.map(x=>esc(x[0])).join('، ')}</b></div>`:''}
+    </div>
+    <div class="card" style="margin-top:12px"><div class="h2" style="margin:0 0 10px">الطريقة</div><ol class="steps">${m.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>
+    ${m.contents.length?`<div class="h2">الوصفة الأصلية</div><div class="gal">${m.contents.map(u=>`<a href="${esc(u.replace('sz=w1000','sz=w2000'))}" target="_blank" rel="noopener"><img src="${esc(u)}" referrerpolicy="no-referrer" loading="lazy" alt=""></a>`).join('')}</div>`:''}
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn" onclick="openPlace('${m.id}')">📅 حطيها في الخطة</button>
+      ${m.link?`<a class="btn ghost" href="${esc(m.link)}" target="_blank" rel="noopener">🔗 الوصفة على الموقع</a>`:''}
+    </div></div>`);
+}
+let placeCtx=null;
+function openPlace(id){
+  const m=M[id];const t=today();const wk=weekKey(t);ensureWeek(wk);
+  placeCtx={id,date:t,slot:m.slots.includes(nextSlot())?nextSlot():m.slots[0]};drawPlace();
+}
+function drawPlace(){
+  const {id,date,slot}=placeCtx;const m=M[id];const t=today();
+  const dates=Array.from({length:7},(_,i)=>addD(t,i));
+  sheet('حطي '+esc(m.ar)+' في الخطة',`
+    <div class="h2" style="margin-top:0">اليوم</div>
+    <div class="pick">${dates.map(d=>`<button class="${d===date?'on':''}" onclick="placeCtx.date='${d}';drawPlace()">${dayName(d)}<br><small>${pd(d).getDate()}</small></button>`).join('')}</div>
+    <div class="h2">الوجبة</div>
+    <div class="seg">${SLOTS.map(s=>`<button class="${s===slot?'on':''}" ${m.slots.includes(s)?'':'disabled style="opacity:.35"'} onclick="placeCtx.slot='${s}';drawPlace()">${SLOT_AR[s]}</button>`).join('')}</div>
+    <div style="margin-top:18px"><button class="btn green" style="width:100%" onclick="confirmPlace()">تمام، حطيها ✓</button></div>`);
+}
+function confirmPlace(){
+  const {id,date,slot}=placeCtx;const wk=weekKey(date);const plan=ensureWeek(wk);const di=plan.days.findIndex(d=>d.date===date);
+  swapCtx={wk,di,slot};doSwap(id);
+}
+
+/* ---------- المشتريات ---------- */
+function vShop(){
+  const sp=shopPlans(ui.shop);const {items,pantry}=aggregate(sp.plans);const ch=S.checks[sp.key]||{};
+  const groups={};items.forEach(it=>(groups[it.a]=groups[it.a]||[]).push(it));
+  const total=items.length,got=items.filter(i=>ch[i.n]).length;
+  const order=AISLE_ORDER.filter(a=>groups[a]).concat(Object.keys(groups).filter(a=>!AISLE_ORDER.includes(a)));
+  $v().innerHTML=`${header('قايمة المشتريات',sp.label,`<button class="iconbtn" onclick="shareList()" aria-label="مشاركة">📤</button>`)}
+  <div class="seg fade"><button class="${ui.shop==='W'?'on':''}" onclick="ui.shop='W';render()">أسبوعي</button><button class="${ui.shop==='M'?'on':''}" onclick="ui.shop='M';render()">شهري</button></div>
+  <span class="muted" style="margin-inline-start:10px;font-size:13px">لـ ${num(S.settings.persons)} أفراد</span>
+  <div class="prog fade"><div class="bar"><i style="width:${total?got/total*100:0}%"></i></div><b>${num(got)}/${num(total)}</b></div>
+  ${order.map(a=>`<div class="aisle fade"><h4>${AISLE_ICON[a]||'🛒'} ${a} <span>${num(groups[a].length)}</span></h4>
+    ${groups[a].sort((x,y)=>(!!ch[x.n])-(!!ch[y.n])||x.n.localeCompare(y.n,'ar')).map(it=>`<button class="item ${ch[it.n]?'on':''}" onclick="toggleItem('${sp.key}',this.dataset.n)" data-n="${esc(it.n)}"><span class="bx">${ch[it.n]?'✓':''}</span><span class="nm"><b>${esc(it.n)}</b><small>${[...it.meals].slice(0,3).map(esc).join('، ')}${it.meals.size>3?' +'+num(it.meals.size-3):''}</small></span><span class="q">${Object.entries(it.u).map(([u,q])=>fmtQty(u,q)).join(' + ')}</span></button>`).join('')}
+  </div>`).join('')}
+  <div class="aisle fade"><h4>🧂 توابل وأساسيات البيت <span>اتأكدي إنها موجودة</span></h4>
+    <div class="pantry">${Object.keys(pantry).sort((a,b)=>a.localeCompare(b,'ar')).map(n=>`<button class="${ch['~'+n]?'on':''}" data-n="${esc('~'+n)}" onclick="toggleItem('${sp.key}',this.dataset.n)">${esc(n)}</button>`).join('')}</div></div>`;
+}
+function toggleItem(key,n){S.checks[key]=S.checks[key]||{};const v=!S.checks[key][n];if(v)S.checks[key][n]=true;else delete S.checks[key][n];persist();render();api({action:'check',scope:key,item:n,checked:v});}
+function shareList(){
+  const sp=shopPlans(ui.shop);const {items}=aggregate(sp.plans);const ch=S.checks[sp.key]||{};
+  const g={};items.filter(i=>!ch[i.n]).forEach(it=>(g[it.a]=g[it.a]||[]).push(it));
+  const txt='🛒 مشتريات '+(ui.shop==='W'?'الأسبوع':'الشهر')+'\n'+Object.entries(g).map(([a,l])=>'\n'+(AISLE_ICON[a]||'')+' '+a+'\n'+l.map(it=>'• '+it.n+' — '+Object.entries(it.u).map(([u,q])=>fmtQty(u,q)).join(' + ')).join('\n')).join('\n');
+  if(navigator.share)navigator.share({text:txt}).catch(()=>{});
+  else{navigator.clipboard&&navigator.clipboard.writeText(txt);toast('اتنسخت القايمة 📋');}
+}
+
+/* ---------- الوجبات ---------- */
+function vMeals(){
+  const f=ui.lib,q=ui.libq;
+  let list=MEALS.slice();
+  if(['B','L','D'].includes(f))list=list.filter(m=>m.slots.includes(f));
+  else if(f!=='all')list=list.filter(m=>m.group===f);
+  if(q)list=list.filter(m=>m.ar.includes(q)||m.en.toLowerCase().includes(q.toLowerCase())||m.ing.some(i=>i[0].includes(q)));
+  $v().innerHTML=`${header('كل الوجبات',num(MEALS.length)+' وجبة نباتية')}
+  <div class="search fade"><span>🔎</span><input id="libq" placeholder="اسم وجبة أو مكوّن (مثلاً: عدس)" value="${esc(q)}"></div>
+  <div class="filters fade">${[['all','الكل'],['B','فطار'],['L','غدا'],['D','عشا'],...Object.entries(GROUP).map(([k,v])=>[k,v.e+' '+v.ar])].map(([k,t])=>`<button class="${f===k?'on':''}" onclick="ui.lib='${k}';render()">${t}</button>`).join('')}</div>
+  <div class="lib">${list.map((m,i)=>`<article class="meal fade" style="animation-delay:${Math.min(i,12)*25}ms" onclick="openDetail('${m.id}')">${photoBox(m)}<div class="body"><h3>${esc(m.ar)}</h3><div class="chips"><span class="chip g">${num(m.kcal)} سعرة</span><span class="chip a">${num(m.p)} جم</span><span class="chip b">${num(m.prep)} د</span></div></div></article>`).join('')||'<p class="muted">مفيش وجبة بالاسم ده</p>'}</div>`;
+  const inp=document.getElementById('libq');
+  inp.oninput=()=>{clearTimeout(window._lq);window._lq=setTimeout(()=>{ui.libq=inp.value;render();const i=document.getElementById('libq');i.focus();i.setSelectionRange(i.value.length,i.value.length);},250);};
+}
+
+/* ---------- الإحصائيات ---------- */
+function vStats(){
+  const t=today(),wk=weekKey(t),plan=ensureWeek(wk),tgt=Number(S.settings.kcal);
+  const kc=plan.days.map(dayKcal),pr=plan.days.map(dayProt);
+  const cells=[];plan.days.forEach(d=>SLOTS.forEach(s=>cells.push(d[s])));
+  const past=plan.days.filter(d=>d.date<=t).flatMap(d=>SLOTS.map(s=>d[s]));
+  const doneN=past.filter(c=>c.status==='done').length;
+  const grp={};cells.forEach(c=>{if(c.id){const g=M[c.id].group;grp[g]=(grp[g]||0)+1;}});
+  const maxG=Math.max(...Object.values(grp),1);
+  // أكتر وجبات اتبدّلت ليها
+  const fav={};S.log.forEach(l=>fav[l.to]=(fav[l.to]||0)+1);
+  const favs=Object.entries(fav).filter(([id])=>M[id]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  // شارت
+  const W=640,H=220,pl=10,pb=28,bw=(W-pl*2)/7;const mx=Math.max(tgt*1.15,...kc);
+  const y=v=>H-pb-(v/mx)*(H-pb-14);
+  const bars=kc.map((v,i)=>{const x=pl+i*bw+bw*.22,w=bw*.56;const col=v>tgt*1.1?'#f2a516':v<tgt*.7?'#9fb4ff':'#14a05a';const d=plan.days[i];
+    return `<rect x="${x}" y="${y(v)}" width="${w}" height="${H-pb-y(v)}" rx="7" fill="${col}" opacity="${d.date===t?1:.85}"><title>${num(v)} سعرة</title></rect><text x="${x+w/2}" y="${y(v)-6}" text-anchor="middle" font-size="11" fill="#6b7488">${num(v)}</text><text x="${x+w/2}" y="${H-8}" text-anchor="middle" font-size="12" font-weight="${d.date===t?700:500}" fill="${d.date===t?'#2f6bff':'#6b7488'}">${dayName(d.date)}</text>`;}).join('');
+  $v().innerHTML=`${header('الإحصائيات','الأسبوع الحالي')}
+  <div class="stats4">
+    <div class="card stat fade"><span>متوسط السعرات</span><b>${num(kc.reduce((a,b)=>a+b,0)/7)}</b><span class="chip ${Math.abs(kc.reduce((a,b)=>a+b,0)/7-tgt*.85)<200?'g':'a'}">الهدف ${num(tgt)}</span></div>
+    <div class="card stat fade"><span>متوسط البروتين</span><b>${num(pr.reduce((a,b)=>a+b,0)/7)} جم</b><span class="chip b">في اليوم</span></div>
+    <div class="card stat fade"><span>التنوع</span><b>${num(variety(plan))}٪</b><span class="chip g">${num(new Set(cells.map(c=>c.id)).size)} وجبة مختلفة</span></div>
+    <div class="card stat fade"><span>الالتزام</span><b>${num(past.length?doneN/past.length*100:0)}٪</b><span class="chip a">${num(doneN)} من ${num(past.length)} وجبة</span></div>
+  </div>
+  <div class="two">
+    <div class="card fade"><div class="h2" style="margin:0 0 8px">السعرات اليومية</div>
+      <svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block"><line x1="0" x2="${W}" y1="${y(tgt)}" y2="${y(tgt)}" stroke="#2f6bff" stroke-dasharray="5 5" stroke-width="1.5"/><text x="${W-4}" y="${y(tgt)-6}" font-size="11" fill="#2f6bff" text-anchor="end">الهدف</text>${bars}</svg></div>
+    <div class="card fade"><div class="h2" style="margin:0 0 8px">توزيع الأنواع</div>
+      ${Object.entries(grp).sort((a,b)=>b[1]-a[1]).map(([g,n])=>`<div class="hb"><span>${GROUP[g].e} ${GROUP[g].ar}</span><div class="bar"><i style="width:${n/maxG*100}%;background:${GROUP[g].c2}"></i></div><b>${num(n)}</b></div>`).join('')}
+    </div>
+  </div>
+  ${favs.length?`<div class="card fade" style="margin-top:16px"><div class="h2" style="margin:0 0 10px">بتختاريها أكتر</div><div class="strip" style="flex-wrap:wrap">${favs.map(([id,n])=>`<button class="t" style="flex:0 1 220px" onclick="openDetail('${id}')">${photoBox(M[id],'sm')}<div><b>${esc(M[id].ar)}</b><small>${num(n)} مرة</small></div></button>`).join('')}</div></div>`:''}`;
+}
+
+/* ---------- الإعدادات ---------- */
+function vSet(){
+  const st=S.settings;
+  $v().innerHTML=`${header('الإعدادات','')}
+  <div class="card fade">
+    <div class="row"><label><b>عدد الأفراد</b><small>الكميات والمشتريات بتتحسب عليه</small></label><div class="step"><button onclick="chg('persons',-1)">−</button><b>${num(st.persons)}</b><button onclick="chg('persons',1)">+</button></div></div>
+    <div class="row"><label><b>هدف السعرات اليومي</b><small>للفرد</small></label><input class="inp" type="number" step="50" value="${st.kcal}" onchange="setK('kcal',this.value)"></div>
+    <div class="row"><label><b>أول يوم في الأسبوع</b></label><select class="inp" onchange="setK('weekStart',this.value)">${[6,0,1].map(d=>`<option value="${d}" ${Number(st.weekStart)===d?'selected':''}>${DAYS[d]}</option>`).join('')}</select></div>
+    <div class="row"><label><b>الربط بالشيت</b><small>${API?'متوصل بـ Google Sheet':'مش متوصل — التطبيق شغال على الموبايل بس'}</small></label>${API?'<button class="btn sm ghost" onclick="pull()">🔄 زامني دلوقتي</button>':''}</div>
+    <div class="row"><label><b>رتّبي الأسبوع من الأول</b><small>اختياراتك المثبتة 📌 والوجبات اللي اتعملت مش هتتغير</small></label><button class="btn sm ghost" onclick="regenerate(weekKey(today()));toast('اتعمل ✓')">🔀 رتّبي</button></div>
+  </div>`;
+}
+function chg(k,d){S.settings[k]=Math.max(1,Math.min(12,Number(S.settings[k])+d));persist();api({action:'settings',data:{[k]:S.settings[k]}});render();}
+function setK(k,v){
+  S.settings[k]=Number(v);
+  if(k==='weekStart'){S.plans={};}
+  persist();api({action:'settings',data:{[k]:S.settings[k]}});render();
+}
+
+/* ---------- sheet + toast ---------- */
+function sheet(title,body){closeSheet();const o=document.createElement('div');o.className='ov';o.id='ov';o.innerHTML=`<div class="sheet" role="dialog"><div class="grab"></div><div class="hd"><h3>${title}</h3><button class="iconbtn" onclick="closeSheet()" aria-label="إغلاق">${ICONS.x}</button></div><div class="bd">${body}</div></div>`;o.addEventListener('click',e=>{if(e.target===o)closeSheet();});document.body.appendChild(o);document.body.style.overflow='hidden';}
+function closeSheet(){const o=document.getElementById('ov');if(o)o.remove();document.body.style.overflow='';}
+let toastT;function toast(html,ms){document.querySelectorAll('.toast').forEach(e=>e.remove());const t=document.createElement('div');t.className='toast';t.innerHTML=html;t.onclick=()=>t.remove();document.body.appendChild(t);clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),ms||2600);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+
+window.addEventListener('hashchange',()=>{closeSheet();render();});
+render();pull();
+</script>
+</body>
+</html>

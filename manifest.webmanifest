@@ -1,0 +1,11 @@
+{
+  "name": "مطبخنا",
+  "short_name": "مطبخنا",
+  "start_url": "./",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#f3f5fa",
+  "theme_color": "#16213e",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
